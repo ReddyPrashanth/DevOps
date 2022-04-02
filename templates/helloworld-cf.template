@@ -76,15 +76,14 @@
                             "\n",
                             [
                                 "#!/bin/bash",
-                                "sudo update -y",
-                                "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash",
-                                ". ~/.nvm/nvm.sh",
-                                "nvm install node",
-                                "mkdir src",
+                                "curl -fsSL https://rpm.nodesource.com/setup_17.x | bash -",
+                                "yum install -y nodejs",
+                                "mkdir /home/ec2-user/src",
                                 "wget https://raw.githubusercontent.com/ReddyPrashanth/DevOps/master/helloworld.js -O /home/ec2-user/src/helloworld.js",
-                                "sudo wget https://raw.githubusercontent.com/ReddyPrashanth/DevOps/master/helloworld.service -O /lib/systemd/system/helloworld.service",
-                                "sudo systemctl daemon-reload",
-                                "sudo systemctl start helloworld.service"
+                                "wget https://raw.githubusercontent.com/ReddyPrashanth/DevOps/master/helloworld.service -O /lib/systemd/system/helloworld.service",
+                                "chown -R ec2-user:ec2-user /home/ec2-user/src",
+                                "systemctl daemon-reload",
+                                "systemctl start helloworld.service"
                             ]
                         ]
                     }
