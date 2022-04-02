@@ -4,7 +4,8 @@ author: @psreepathi
 created_date: 4/1/2022
 modified_date: 4/1/2022 
 """
-
+from ipaddress import ip_network
+from requests import get
 from troposphere import (
     Base64,
     ec2,
@@ -16,7 +17,9 @@ from troposphere import (
     Template,
 )
 
+public_ip = get('https://api.ipify.org').text
 application_port = "3000"
+public_cidr_ip = str(ip_network(ip))
 
 t = Template()
 t.description = "Effective DevOps in AWS: helloWorld web application"
@@ -36,7 +39,7 @@ t.add_resource(ec2.SecurityGroup(
             IpProtocol="tcp",
             FromPort="22",
             ToPort="22",
-            CidrIp="0.0.0.0/0"
+            CidrIp=public_ip
         ),
         ec2.SecurityGroupRule(
             IpProtocol="tcp",

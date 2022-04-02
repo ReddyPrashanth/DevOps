@@ -1,0 +1,95 @@
+{
+    "Description": "Effective DevOps in AWS: helloWorld web application",
+    "Outputs": {
+        "InstancePublicIp": {
+            "Description": "Public IP of our hello world instance",
+            "Value": {
+                "Fn::GetAtt": [
+                    "instance",
+                    "PublicIp"
+                ]
+            }
+        },
+        "WebUrl": {
+            "Description": "Application endpoint",
+            "Value": {
+                "Fn::Join": [
+                    "",
+                    [
+                        "http://",
+                        {
+                            "Fn::GetAtt": [
+                                "instance",
+                                "PublicDnsName"
+                            ]
+                        },
+                        ":",
+                        "3000"
+                    ]
+                ]
+            }
+        }
+    },
+    "Parameters": {
+        "KeyPair": {
+            "ConstraintDescription": "must be the name of an existing EC2 KeyPair",
+            "Description": "Name of an existing keypair to SSH",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        }
+    },
+    "Resources": {
+        "SecurityGroup": {
+            "Properties": {
+                "GroupDescription": "Allow SSH and TCP/3000 access",
+                "SecurityGroupIngress": [
+                    {
+                        "CidrIp": "64.179.161.41/32",
+                        "FromPort": "22",
+                        "IpProtocol": "tcp",
+                        "ToPort": "22"
+                    },
+                    {
+                        "CidrIp": "0.0.0.0/0",
+                        "FromPort": "3000",
+                        "IpProtocol": "tcp",
+                        "ToPort": "3000"
+                    }
+                ]
+            },
+            "Type": "AWS::EC2::SecurityGroup"
+        },
+        "instance": {
+            "Properties": {
+                "ImageId": "ami-064ff912f78e3e561",
+                "InstanceType": "t2.micro",
+                "KeyName": {
+                    "Ref": "KeyPair"
+                },
+                "SecurityGroups": [
+                    {
+                        "Ref": "SecurityGroup"
+                    }
+                ],
+                "UserData": {
+                    "Fn::Base64": {
+                        "Fn::Join": [
+                            "\n",
+                            [
+                                "#!/bin/bash",
+                                "curl -fsSL https://rpm.nodesource.com/setup_17.x | bash -",
+                                "yum install -y nodejs",
+                                "mkdir /home/ec2-user/src",
+                                "wget https://raw.githubusercontent.com/ReddyPrashanth/DevOps/master/helloworld.js -O /home/ec2-user/src/helloworld.js",
+                                "wget https://raw.githubusercontent.com/ReddyPrashanth/DevOps/master/helloworld.service -O /lib/systemd/system/helloworld.service",
+                                "chown -R ec2-user:ec2-user /home/ec2-user/src",
+                                "systemctl daemon-reload",
+                                "systemctl start helloworld.service"
+                            ]
+                        ]
+                    }
+                }
+            },
+            "Type": "AWS::EC2::Instance"
+        }
+    }
+}
