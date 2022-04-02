@@ -6,7 +6,7 @@ After=network.target
 [Service]
 Type=simple
 User=ec2-user
-ExecStart=/home/ec2-user/.nvm/versions/node/v17.8.0/bin/node /home/ec2-user/src/helloworld.js
+ExecStart=/usr/bin/node /home/ec2-user/src/helloworld.js
 Restart=on-failure
 
 [Install]
