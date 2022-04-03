@@ -52,14 +52,7 @@ t.add_resource(ec2.SecurityGroup(
 
 ud = Base64(Join('\n', [
     "#!/bin/bash",
-    "curl -fsSL https://rpm.nodesource.com/setup_17.x | bash -",
-    "yum install -y nodejs",
-    "mkdir /home/ec2-user/src",
-    "wget https://raw.githubusercontent.com/ReddyPrashanth/DevOps/master/helloworld.js -O /home/ec2-user/src/helloworld.js",
-    "wget https://raw.githubusercontent.com/ReddyPrashanth/DevOps/master/helloworld.service -O /lib/systemd/system/helloworld.service",
-    "chown -R ec2-user:ec2-user /home/ec2-user/src",
-    "systemctl daemon-reload",
-    "systemctl start helloworld.service"
+    "curl -fsSL https://rpm.nodesource.com/setup_17.x | bash -"
 ]))
 
 t.add_resource(ec2.Instance(
