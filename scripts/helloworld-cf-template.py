@@ -19,7 +19,7 @@ from troposphere import (
 
 public_ip = get('https://api.ipify.org').text
 application_port = "3000"
-public_cidr_ip = str(ip_network(ip))
+public_cidr_ip = str(ip_network(public_ip))
 
 t = Template()
 t.description = "Effective DevOps in AWS: helloWorld web application"
